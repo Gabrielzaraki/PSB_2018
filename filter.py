@@ -29,13 +29,6 @@ X = np.fft.fftshift(X1)
 
 f = np.linspace(-0.5, 0.5, len(x))
 
-#criando filtro passa-altas 5Hz janelamento sem firwin
-
-#w1 = np.ones((26120,), dtype=float)
-#plt.figure()
-#w = np.pad(w1, (2300,2300), 'constant', constant_values=(0))
-#w2 = np.fft.fftshift(w)
-
 #criando filtro FIR janelamento com firwin
 
 #passa-altas
@@ -45,9 +38,9 @@ w = np.pad(w1, (0,len(x) - len(w1)), 'constant', constant_values = (0))
 W = np.fft.fft(w)
 W2 = np.fft.fftshift(W)
 
-#rejeita faixa 60 HZ
+#rejeita faixa 60, 120 e 180 HZ
 
-w3 = signal.firwin(801, [59,61, 119,121], nyq=fs/2)
+w3 = signal.firwin(801, [59,61, 119,121, 179,179.9999], nyq=fs/2)
 w4 = np.pad(w3, (0,len(x) - len(w3)), 'constant', constant_values = (0))
 W5 = np.fft.fft(w4)
 W6 = np.fft.fftshift(W5)
@@ -63,7 +56,7 @@ Q = np.multiply(Z,W5)
 q = np.fft.ifft(Q)
 Q1 = np.fft.fftshift(Q)
 
-#QRS
+#Obtenção das amostras do complexo QRS + zero padding + |fft|²
 
 r1 = np.pad(q[245:265], (0,980),'constant',  constant_values = (0))
 R1 = (abs(np.fft.fft(r1)))**2
@@ -89,7 +82,7 @@ R7 = (abs(np.fft.fft(r7)))**2
 r8 = np.pad(q[2305:2325], (0,980), 'constant',  constant_values = (0))
 R8 = (abs(np.fft.fft(r8)))**2
 
-r9 = np.pad(q[2595:2615], (0,980),'constant',  constant_values = (0))
+r9 = np.pad(q[2595:2615], (0,980),'constant',  constant_value = (0))
 R9 = (abs(np.fft.fft(r9)))**2
 
 r10 = np.pad(q[2832:2852], (0,980),'constant',  constant_values = (0))
@@ -142,22 +135,6 @@ R25 = (abs(np.fft.fft(r25)))**2
 
 r26 = np.pad(q[7613:7633], (0,980),'constant',  constant_values = (0))
 R26 = (abs(np.fft.fft(r26)))**2
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #calculo da média dos valores da DFT dos complexos QRS separados
 
